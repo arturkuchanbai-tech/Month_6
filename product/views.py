@@ -2,11 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Category, Product, Review
+from .models import Category, Product, Review,Order,OrderItem
 from .serializers import (
     CategoryDetailSerializer, CategoryListSerializer,
     ProductDetailSerializer, ProductListSerializer,
-    ReviewDetailSerializer, ReviewListSerializer
+    ReviewDetailSerializer, ReviewListSerializer,
+    OrderItemDetailSerializer,OrderItemListSerializer,
+    OrderDetailSerializer,OrderListSerializer
 )
 
 @api_view(['GET'])
@@ -91,6 +93,65 @@ def review_modify_view(request,id):
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     serializer = ReviewDetailSerializer(review,data =request.data, partial=(request.method=='PATCH'))
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def order_list_view(request):
+    orders = Order.objects.all()
+    serializer = OrderListSerializer(orders, many=True)
+    return Response(serializer.data)
+@api_view(['GET'])
+def order_detail_view(request,id):
+    order=get_object_or_404(Order,id=id)
+    serializer=OrderDetailSerializer(Order)
+    return Response(serializer.data)
+@api_view(['POST'])
+def order_create_view(request):
+    serializer = OrderDetailSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+@api_view(['PUT','PATCH','DELETE'])
+def order_modify_view(request,id):
+    order = get_object_or_404(Order,id=id)
+
+    if request.method =='DELETE':
+        order.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    serializer = OrderDetailSerializer(order,data =request.data, partial=(request.method=='PATCH'))
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def orderitem_list_view(request):
+    orderitems = OrderItem.objects.all()
+    serializer = OrderItemListSerializer(orderitems, many=True)
+    return Response(serializer.data)
+@api_view(['GET'])
+def orderitem_detail_view(request,id):
+    orderitem=get_object_or_404(OrderItem,id=id)
+    serializer=OrderItemDetailSerializer(orderitem)
+    return Response(serializer.data)
+@api_view(['POST'])
+def orderitem_create_view(request):
+    serializer = OrderItemDetailSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+@api_view(['PUT','PATCH','DELETE'])
+def orderitem_modify_view(request,id):
+    orderitem = get_object_or_404(OrderItem,id=id)
+
+    if request.method =='DELETE':
+        orderitem.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    serializer = OrderItemDetailSerializer(orderitem,data =request.data, partial=(request.method=='PATCH'))
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
