@@ -1,6 +1,10 @@
+
+
+
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status,generics,viewsets
 from django.shortcuts import get_object_or_404
 from .models import Category, Product, Review,Order,OrderItem
 from .serializers import (
@@ -10,6 +14,43 @@ from .serializers import (
     OrderItemDetailSerializer,OrderItemListSerializer,
     OrderDetailSerializer,OrderListSerializer
 )
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategoryListSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CategoryListSerializer
+        return CategoryDetailSerializer
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductListSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProductListSerializer
+        return ProductDetailSerializer
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewListSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ReviewListSerializer
+        return ReviewDetailSerializer
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderListSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return OrderListSerializer
+        return OrderDetailSerializer
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemListSerializer
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return OrderItemListSerializer
+        return OrderItemDetailSerializer
+
+
 
 @api_view(['GET'])
 def category_list_view(request):
