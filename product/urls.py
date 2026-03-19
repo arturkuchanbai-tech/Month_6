@@ -13,4 +13,5 @@ router.register('orderitems', OrderItemViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),  
+    path('users/', include('users.urls')),
 ]
