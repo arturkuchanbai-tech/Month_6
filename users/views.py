@@ -63,7 +63,7 @@ class AuthorizationAPIView(APIView):
         if not user.is_active:
             return Response({'error': 'User is not confirmed'},status=status.HTTP_403_FORBIDDEN)
 
-        token = Token.objects.get_or_create(user=user)
+        token, _= Token.objects.get_or_create(user=user)
 
         return Response({'key': token.key})
     

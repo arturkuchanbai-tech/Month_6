@@ -21,4 +21,6 @@ class ConfirmationCode(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.created_at + timezone.timedelta(minutes=10)
-    
+
+
+
